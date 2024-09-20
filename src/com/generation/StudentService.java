@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public class StudentService{
-     HashMap<String, Course> courseList = new HashMap<>();
-     HashMap<String, Student> students = new HashMap<>();
-     HashMap<String, List<Course>> coursesEnrolledByStudents = new HashMap<>();
+    HashMap<String, Course> courseList = new HashMap<>();
+    HashMap<String, Student> students = new HashMap<>();
+    HashMap<String, List<Course>> coursesEnrolledByStudents = new HashMap<>();
 
     public StudentService() {
         courseList.put("Math", new Course("Math", 10, "Aurelio Baldor"));
@@ -17,35 +17,40 @@ public class StudentService{
         courseList.put("Biology", new Course("Biology", 10, "Charles Darwin"));
     }
 
-    // method that lets you add students:
-    public void addStudent(String name, String id, int age) {
-        Student student = new Student(name, id, age);
-        students.put(id, student);
-    }
+    public void enrollStudents(String courseName, String studentID) {
+        Course course = courseList.get(courseName);
 
-    public void enrollStudents( String courseName, String studentID ) {
-        Course course = courseList.get( courseName );
+        if (!coursesEnrolledByStudents.containsKey(studentID)){
+            coursesEnrolledByStudents.put(studentID, new ArrayList<>() );
+          } coursesEnrolledByStudents.get(studentID).add(course);
+    } // enrollStudents
 
-        if ( !coursesEnrolledByStudents.containsKey( studentID ) )
-        {
-            coursesEnrolledByStudents.put( studentID, new ArrayList<>() );
+    public void unEnrollStudents(String courseName, String studentID){
+        Course course = courseList.get(courseName);
+
+        if ( coursesEnrolledByStudents.containsKey(studentID)) {
+             coursesEnrolledByStudents.get(studentID).remove(course);
         }
-        coursesEnrolledByStudents.get( studentID ).add( course );
-    }
-
-    public void unEnrollStudents( String courseName, String studentID ){
-        Course course = courseList.get( courseName );
-
-        if ( coursesEnrolledByStudents.containsKey( studentID ) ) {
-            coursesEnrolledByStudents.get( studentID ).remove( course );
-        }
-    }
+    } // unEnrollStudents
 
     public void showEnrolledStudents(String courseId){
-        //TODO implement using collections loops
-    }
+        Course course = courseList.get(courseId);
+        for (String studentId : coursesEnrolledByStudents.keySet()) {
+			List<Course> allCourse = coursesEnrolledByStudents.get(studentId);
+			if (allCourse.contains(course)) {
+				Student student = students.get(studentId);
+				System.out.println(student);
+			}
+		}
+    } // showEnrolledStudents
 
     public void showAllCourses(){
-        //TODO implement using collections loops
-    }
+        for (Course course : courseList.values()) {
+        System.out.println(course);
+        }
+    } // showAllCourses
+
+	public void addStudent(Student student) {
+		students.put(student.getId(), student); 
+	} // addStudent
 }
